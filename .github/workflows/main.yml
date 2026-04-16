@@ -43,7 +43,9 @@ jobs:
 
       - name: Run npm Test on Client
         working-directory: client
-        run: npm test
+        run: |
+          npm install
+          npm npm test -- --watch=false --browsers=ChromeHeadless
 
   Security-Scan:
     runs-on: ubuntu-latest
