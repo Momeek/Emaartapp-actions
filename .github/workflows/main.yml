@@ -45,7 +45,7 @@ jobs:
         working-directory: client
         run: |
           npm install
-          npm npm test -- --watch=false --browsers=ChromeHeadless
+          npm test -- --watch=false --browsers=ChromeHeadless
 
   Security-Scan:
     runs-on: ubuntu-latest
