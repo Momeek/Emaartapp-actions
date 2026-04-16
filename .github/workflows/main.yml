@@ -1,7 +1,7 @@
 name: Emartapp CICD WF
 on:
   push:
-    branches: [main]
+    branches: [fixbugs-001]
 
   pull_request:
     branches: [main]
@@ -107,6 +107,7 @@ jobs:
 
   Build_And_Deploy:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs: [Build, Test, Security-Scan]
     steps:
       - name: Checkout Code
