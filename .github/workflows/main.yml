@@ -1,0 +1,145 @@
+name: Emartapp CICD WF
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Dependencies for Client
+        working-directory: client
+        run: npm install
+
+      - name: Install Dependencies for Javapi
+        working-directory: javaapi
+        run: mvn install -DskipTest
+
+      - name: Install Dependencies for Nodeapi
+        working-directory: nodeapi
+        run: npm install
+
+  Test:
+    runs-on: ubuntu-latest
+    needs: Build
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run npm Test on Client
+        working-directory: client
+        run: npm test
+
+      - name: Run maven test on Javaapi
+        run: mvn test
+
+  Security-Scan:
+    runs-on: ubuntu-latest
+    needs: [Build, Test]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy scan on Client
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: "fs"
+          output: client-trivy-report.json
+          format: table
+          scan-ref: "client"
+          vuln-type: "os,library"
+          exit-code: "0"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Client Trivy Report As an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-trivy-report
+          path: client-trivy-report.json
+
+      - name: Run Trivy scan on Javaapi
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: "fs"
+          output: javaapi-trivy-report.json
+          format: table
+          scan-ref: "javaapi"
+          vuln-type: "os,library"
+          exit-code: "0"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Javaapi Trivy Report As an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: javaapi-trivy-report
+          path: javaapi-trivy-report.json
+
+      - name: Run Trivy scan on nodeapi
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: "fs"
+          output: nodeapi-trivy-report.json
+          format: table
+          scan-ref: "nodeapi"
+          vuln-type: "os,library"
+          exit-code: "0"
+          severity: "CRITICAL,HIGH"
+
+      - name: Upload Javaapi Trivy Report As an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nodeapi-trivy-report
+          path: nodeapi-trivy-report.json
+
+  Build_And_Deploy:
+    runs-on: ubuntu-latest
+    needs: [Build, Test, Security-Scan]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AACESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.ASECRET_ACCESS_KEY}}
+          aws-region: ${{vars.AWS_REGION}}
+
+      - name: Login to AWS ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, image, tags and push to Client,Nodeapi And Javaapi
+        id: build_image
+        env:
+          ECR_REGISTRY: ${{steps.ecr-login.output.registy}}
+          IMAGE_TAG: ${{github.sha}}
+          CLIENT_ECR_REPOSITORY: "clientimg"
+          JAVAAPI_ECR_REPOSITORY: "javaapiimg"
+          NODEAPI_ECR_REPOSITORY: "nodeapiimg"
+
+        run: |
+          docker build -f client/Dockerfile -t $ECR_REGISTRY/CLIENT_REPOSITORY:IMAGE_TAG client
+          docker push $ECR_EREGISTRY/CLIENT_REPOSITORY:IMAGE_TAG
+          docker build -f javaapi/Dockerfile -t $ECR_REGISTRY/JAVAAPI_REPOSITORY:IMAGE_TAG javaapi
+          docker push $ECR_EREGISTRY/CLIENT_REPOSITORY:IMAGE_TAG
+          docker build -f nodeapi/Dockerfile -t $ECR_REGISTRY/NODEAPI_REPOSITORY:IMAGE_TAG nodeapi
