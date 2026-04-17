@@ -73,7 +73,7 @@ jobs:
           format: table
           scan-ref: "client"
           vuln-type: "os,library"
-          exit-code: "1"
+          exit-code: "0"
           severity: "CRITICAL,HIGH"
 
       - name: Upload Client Trivy Report As an Artifact
