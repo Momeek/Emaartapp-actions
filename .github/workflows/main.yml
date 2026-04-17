@@ -118,7 +118,7 @@ jobs:
 
   SonarQube-Scan:
     runs-on: ubuntu-latest
-    needs: Build
+    needs: [ Build, Security-Scan ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -136,7 +136,7 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: SonarQube scan for all Stacks
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
           SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
@@ -151,7 +151,7 @@ jobs:
   Build_And_Deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs: [ Build, Security-Scan ]
+    needs: [ Build, Security-Scan, SonarQube-Scan ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
