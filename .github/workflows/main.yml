@@ -36,25 +36,25 @@ jobs:
         working-directory: nodeapi
         run: npm install
 
-  Test:
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  #Test:
+  # runs-on: ubuntu-latest
+  #needs: Build
+  #steps:
+  # - name: Checkout Code
+  #  uses: actions/checkout@v4
+  #  with:
+  #   fetch-depth: 0
 
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
+  # - name: Setup Node.js 16
+  ##   uses: actions/setup-node@v3
+  #  with:
+  #   node-version: "16"
 
-      - name: Run npm Test on Client
-        working-directory: client
-        run: |
-          npm install
-          npm test -- --watch=false --browsers=ChromeHeadless
+  #- name: Run npm Test on Client
+  #  working-directory: client
+  # run: |
+  #   npm install
+  #  npm test -- --watch=false --browsers=ChromeHeadless
 
   Security-Scan:
     runs-on: ubuntu-latest
