@@ -1,7 +1,7 @@
 name: Emartapp CICD WF
 on:
   push:
-    branches: [ fixbugs-001 ]
+    branches: [ fixbugs-001,main]
 
   pull_request:
     branches: [ main ]
@@ -51,12 +51,15 @@ jobs:
   #  with:
   #   node-version: "16"
 
+<<<<<<< HEAD
   #- name: Run npm Test on Client
   #  working-directory: client
   # run: |
   #   npm install
   #  npm test -- --watch=false --browsers=ChromeHeadless
 
+=======
+>>>>>>> origin/main
   Security-Scan:
     runs-on: ubuntu-latest
     environment: Development
