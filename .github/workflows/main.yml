@@ -7,14 +7,14 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
-env:
-  Environment: development
+
 permissions:
   contents: read
 
 jobs:
   Build:
     runs-on: ubuntu-latest
+    environment: Development
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -59,6 +59,7 @@ jobs:
 
   Security-Scan:
     runs-on: ubuntu-latest
+    environment: Development
     needs: Build
     steps:
       - name: Checkout Code
@@ -119,6 +120,7 @@ jobs:
 
   SonarQube-Scan:
     runs-on: ubuntu-latest
+    environment: Development
     needs: [ Build ]
     steps:
       - name: Checkout Code
@@ -139,7 +141,7 @@ jobs:
       - name: SonarQube scan for all Stacks
         uses: SonarSource/sonarqube-scan-action@v6
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1
@@ -149,6 +151,7 @@ jobs:
 
   Build_And_Deploy:
     runs-on: ubuntu-latest
+    environment: Development
     if: github.ref == 'refs/heads/main'
     needs: [ Build, Security-Scan, SonarQube-Scan ]
     steps:
