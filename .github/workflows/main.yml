@@ -7,7 +7,8 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
-
+env:
+  Environment: development
 permissions:
   contents: read
 
@@ -138,6 +139,7 @@ jobs:
       - name: SonarQube scan for all Stacks
         uses: SonarSource/sonarqube-scan-action@v6
         env:
+          environment: development
           SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
 
       - name: SonarQube Quality Gate Check
