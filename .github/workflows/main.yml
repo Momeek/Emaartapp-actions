@@ -160,4 +160,4 @@ jobs:
           docker build -f javaapi/Dockerfile -t $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:$IMAGE_TAG javaapi
           docker push $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:$IMAGE_TAG
           docker build -f nodeapi/Dockerfile -t $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG nodeapi
-          ddocker push $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG
