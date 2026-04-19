@@ -4,12 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class BackendConfigService {
-    
-    // backend_url ='http://localhost:9000/webapi';
-    backend_url ='http://localhost:';
 
-    javaport='9000';
-    nodeport='5000';
-    angularport='4200';
+  // backend_url ='http://localhost:9000/webapi';
+  backend_url = 'http://Emartapp-ALB-1488438150.us-east-1.elb.amazonaws.com/webapi';
+
   constructor() { }
 }

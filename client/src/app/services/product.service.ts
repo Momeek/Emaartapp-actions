@@ -6,8 +6,8 @@ import { BackendConfigService } from "../backend_config/backend-config.service";
 
 @Injectable({ providedIn: "root" })
 export class ProductService {
-  
-  private baseUrl:String ="";
+
+  private baseUrl: String = "";
   rootURL = '/api';
   // rootURL = this.baseUrl+this.bcs.nodeport+"/api";
   private url: string = `${this.rootURL}/shop`;
@@ -23,8 +23,8 @@ export class ProductService {
   private categories = new BehaviorSubject(null);
   currentCategories = this.categories.asObservable();
 
-  constructor(private http: HttpClient, private router: Router,private bcs:BackendConfigService) {
-    this.baseUrl =this.bcs.backend_url;
+  constructor(private http: HttpClient, private router: Router, private bcs: BackendConfigService) {
+    this.baseUrl = this.bcs.backend_url;
   }
 
   getShopInventory() {

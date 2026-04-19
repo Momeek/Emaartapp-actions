@@ -11,52 +11,53 @@ import { Axios } from 'axios';
 })
 export class BookService {
 
-  private baseUrl:String ='';
-  public hello:string ="Hai"; 
+  private baseUrl: String = '';
+  public hello: string = "Hai";
 
   private books_ = new BehaviorSubject(null);
   currentBooks = this.books_.asObservable();
-  constructor(private http: HttpClient,private bcs:BackendConfigService,
-  public http_:Axios, private router: Router) {  this.baseUrl =this.bcs.backend_url;
-                       alert(this.baseUrl);
-                     }
+  constructor(private http: HttpClient, private bcs: BackendConfigService,
+    public http_: Axios, private router: Router) {
+      this.baseUrl = this.bcs.backend_url;
+    alert(this.baseUrl);
+  }
 
 
 
 
-     
-                    
-   getAllBooks() {
-    
-    return this.http.get<any>(this.baseUrl+"/books");
+
+
+  getAllBooks() {
+
+    return this.http.get<any>(this.baseUrl + "/webapi/books");
   }
 
   get(id) {
-    return this.http.get(this.baseUrl+`/books/${id}`);
+    return this.http.get(this.baseUrl + `/webapi/books/${id}`);
   }
 
   create(data) {
-    return this.http.post(this.baseUrl+"/books", data);
+    return this.http.post(this.baseUrl + "/webapi/books", data);
   }
 
   update(id, data) {
-    return this.http.put(this.baseUrl+`/books/${id}`, data);
+    return this.http.put(this.baseUrl + `/webapi/books/${id}`, data);
   }
 
   delete(id) {
-    return this.http.delete(this.baseUrl+`/books/${id}`);
+    return this.http.delete(this.baseUrl + `/webapi/books/${id}`);
   }
 
   deleteAll() {
-    return this.http.delete(this.baseUrl+`/books`);
+    return this.http.delete(this.baseUrl + `/webapi/books`);
   }
 
   findByTitle(title) {
-    return this.http.get(this.baseUrl+`/books?title=${title}`);
+    return this.http.get(this.baseUrl + `/webapi/books?title=${title}`);
   }
   //new mwthod
   getPublished() {
-    return this.http.get(this.baseUrl+`/books/published`);
+    return this.http.get(this.baseUrl + `/webapi/books/published`);
   }
 
 

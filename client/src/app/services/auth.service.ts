@@ -7,12 +7,12 @@ import { bgCyan } from "colors";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
-  private baseUrl:String ="";
+  private baseUrl: String = "";
   rootURL = '/api';
   // rootURL = this.baseUrl+this.bcs.nodeport+"/api";
   private url: string = `${this.rootURL}/user/`;
 
-  
+
 
   private authStatus = new BehaviorSubject(false);
   currentAuthStatus = this.authStatus.asObservable();
@@ -21,8 +21,8 @@ export class AuthService {
   private userOrdersData = new BehaviorSubject(null);
   currentUserOrdersData = this.userOrdersData.asObservable();
 
-  constructor(private http: HttpClient, private router: Router, private bcs:BackendConfigService) {
-    this.baseUrl =this.bcs.backend_url;
+  constructor(private http: HttpClient, private router: Router, private bcs: BackendConfigService) {
+    this.baseUrl = this.bcs.backend_url;
   }
 
   changeAuthStatus(auth) {
