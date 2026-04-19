@@ -6,13 +6,13 @@ import { BackendConfigService } from "../backend_config/backend-config.service";
 
 @Injectable({ providedIn: "root" })
 export class OrderService {
-  private baseUrl:String ="";
-  
+  private baseUrl: String = "";
+
   rootURL = '/api';
   // rootURL = this.baseUrl+this.bcs.nodeport+"/api";
   private url: string = `${this.rootURL}/shop`;
 
-  
+
   // private url: string = "http://localhost:5000/shop";
 
   private userOrder = new BehaviorSubject(null);
@@ -21,8 +21,8 @@ export class OrderService {
   private orderStatus = new BehaviorSubject(false);
   currentOrderStatus = this.orderStatus.asObservable();
 
-  constructor(private http: HttpClient, private router: Router,private bcs:BackendConfigService) {
-    this.baseUrl =this.bcs.backend_url;
+  constructor(private http: HttpClient, private router: Router, private bcs: BackendConfigService) {
+    this.baseUrl = this.bcs.backend_url;
   }
 
   changeOrderStatus(status) {

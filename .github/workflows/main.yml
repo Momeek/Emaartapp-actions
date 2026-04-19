@@ -161,3 +161,60 @@ jobs:
           docker push $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:$IMAGE_TAG
           docker build -f nodeapi/Dockerfile -t $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG nodeapi
           docker push $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Download Task Definition
+        run: |
+          aws ecs describe-task-definition --task-definition emartapp-client-task \
+          --query taskDefinition > emartapp-client-task.json
+          aws ecs describe-task-definition --task-definition emartapp-javaapi-task \
+          --query taskDefinition > emartapp-javaapi-task.json
+          aws ecs describe-task-definition --task-definition emartapp-nodeapi-task \
+          --query taskDefinition > emartapp-nodeapi-task.json
+
+      - name: Update client task definition with new image
+        id: update-client-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: emartapp-client-task.json
+          container-name: client
+          image: ${{ steps.ecr-login.outputs.registry }}/clientimg:${{ github.sha }}
+
+      - name: Update javaapi task definition with new image
+        id: update-javaapi-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: emartapp-javaapi-task.json
+          container-name: javaapi
+          image: ${{steps.ecr-login.outputs.registry}}/javaapiimg:${{ github.sha }}
+
+      - name: Update nodeapi task definition with new image
+        id: update-nodeapi-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: emartapp-nodeapi-task.json
+          container-name: nodeapi
+          image: ${{steps.ecr-login.outputs.registry}}/nodeapiimg:${{github.sha}}
+
+      - name: Deploy Client to AWS ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{steps.update-client-task.outputs.task-definition}}
+          service: emartapp-client-SVC
+          cluster: Emaartapp
+          wait-for-service-stability: true
+
+      - name: Deploy javaapi to AWS ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{steps.update-javaapi-task.outputs.task-definition}}
+          service: emartapp-javaapi-SVC
+          cluster: Emaartapp
+          wait-for-service-stability: true
+
+      - name: Deploy nodeapi to AWS ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{steps.update-nodeapi-task.outputs.task-definition}}
+          service: emartapp-nodeapi-SVC
+          cluster: Emaartapp
+          wait-for-service-stability: true

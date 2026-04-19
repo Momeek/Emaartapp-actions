@@ -28,52 +28,52 @@ router.post("/register", (req, res) => {
           return res.status(400).json({ success: false, message: errors.cardId });
         } else {
 
-///mailing
+          ///mailing
 
-const nodemailer = require("nodemailer");
- 
-var sender = nodemailer.createTransport({
-  service: 'gmail',
-  type: "SMTP",
-  host: "smtp.gmail.com",
-  auth: {
-    user: 'keshav.visu@gmail.com',
-    pass: '271298318929'
-  }
-});
- 
-var mail = {
-  from: "keshav.visu@gmail.com",
-  to: req.body.email,
-  subject: "E_MART Registration Successfull",
-  text: "Dear "+req.body.fname+"! Your Registration Finished Successfully.\nWelcome to E-MART Family.\n Thankyou!"
-};
- 
-sender.sendMail(mail, function(error, info) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Email sent successfully: "
-                 + info.response);
-  }
-});
+          const nodemailer = require("nodemailer");
+
+          var sender = nodemailer.createTransport({
+            service: 'gmail',
+            type: "SMTP",
+            host: "smtp.gmail.com",
+            auth: {
+              user: 'keshav.visu@gmail.com',
+              pass: '271298318929'
+            }
+          });
+
+          var mail = {
+            from: "keshav.visu@gmail.com",
+            to: req.body.email,
+            subject: "E_MART Registration Successfull",
+            text: "Dear " + req.body.fname + "! Your Registration Finished Successfully.\nWelcome to E-MART Family.\n Thankyou!"
+          };
+
+          sender.sendMail(mail, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent successfully: "
+                + info.response);
+            }
+          });
 
 
 
-// mailing end
+          // mailing end
 
           // Admin Role
-             urole=0;
-              if(req.body.fname=="admin"||req.body.fname=="ADMIN"||
-              req.body.lname=="admin"||req.body.lname=="ADMIN"||req.body.email=="admin@gmail.com"||
-              req.body.email=="admin@mail.com"||req.body.email=="ADMIN@gmail.com"||
-              req.body.email=="ADMIN@mail.com") {urole =1};
+          urole = 0;
+          if (req.body.fname == "admin" || req.body.fname == "ADMIN" ||
+            req.body.lname == "admin" || req.body.lname == "ADMIN" || req.body.email == "admin@gmail.com" ||
+            req.body.email == "admin@mail.com" || req.body.email == "ADMIN@gmail.com" ||
+            req.body.email == "ADMIN@mail.com") { urole = 1 };
           // Admin Role
-          
+
           const newUser = new User({
 
 
-             role:urole,
+            role: urole,
             cardId: req.body.cardId,
             fname: req.body.fname,
             lname: req.body.lname,
@@ -126,39 +126,39 @@ router.post("/login", (req, res) => {
         });
 
 
-///mailing
+        ///mailing
 
-const nodemailer = require("nodemailer");
- 
-var sender = nodemailer.createTransport({
-  service: 'gmail',
-  type: "SMTP",
-  host: "smtp.gmail.com",
-  auth: {
-    user: 'keshav.visu@gmail.com',
-    pass: '21312312312'
-  }
-});
- 
-var mail = {
-  from: "keshav.visu@gmail.com",
-  to: email,
-  subject: "Login alert mail from E-Mart",
-  text: "Dear "+email +" , you have Loggedin successfully at "+Date.now()
-};
- 
-sender.sendMail(mail, function(error, info) {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Email sent successfully: "
-                 + info.response);
-  }
-});
+        const nodemailer = require("nodemailer");
+
+        var sender = nodemailer.createTransport({
+          service: 'gmail',
+          type: "SMTP",
+          host: "smtp.gmail.com",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          }
+        });
+
+        var mail = {
+          from: "keshav.visu@gmail.com",
+          to: email,
+          subject: "Login alert mail from E-Mart",
+          text: "Dear " + email + " , you have Loggedin successfully at " + Date.now()
+        };
+
+        sender.sendMail(mail, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent successfully: "
+              + info.response);
+          }
+        });
 
 
 
-// mailing end
+        // mailing end
 
 
 
