@@ -148,7 +148,7 @@ jobs:
       - name: Build, image, tags and push to Client,Nodeapi And Javaapi
         id: build_image
         env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registy }}
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           IMAGE_TAG: ${{github.sha}}
           CLIENT_ECR_REPOSITORY: "clientimg"
           JAVAAPI_ECR_REPOSITORY: "javaapiimg"
