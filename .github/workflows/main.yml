@@ -155,9 +155,9 @@ jobs:
           NODEAPI_ECR_REPOSITORY: "nodeapiimg"
 
         run: |
-          docker build -f client/Dockerfile -t $ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:IMAGE_TAG client
+          docker build -f client/Dockerfile -t $ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$IMAGE_TAG client
           docker push $ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$IMAGE_TAG
-          docker build -f javaapi/Dockerfile -t $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:IMAGE_TAG javaapi
+          docker build -f javaapi/Dockerfile -t $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:$IMAGE_TAG javaapi
           docker push $ECR_REGISTRY/$JAVAAPI_ECR_REPOSITORY:$IMAGE_TAG
-          docker build -f nodeapi/Dockerfile -t $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:IMAGE_TAG nodeapi
+          docker build -f nodeapi/Dockerfile -t $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG nodeapi
           ddocker push $ECR_REGISTRY/$NODEAPI_ECR_REPOSITORY:$IMAGE_TAG
