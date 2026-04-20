@@ -25,6 +25,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/shop", shopRoutes);
 
 
+
 mongoose
   .connect(mongooseURI)
   .then(() => {
@@ -35,3 +36,10 @@ mongoose
     console.log("\nConnected to".magenta, "E-MART".cyan, "database".magenta);
   })
   .catch(err => console.log("Error connecting to database".cyan, err));
+
+app.get('/health', (req, res) => {
+  mongoose.connection.readyState === 1
+    ? res.status(200).json({ status: 'healthy' })
+    : res.status(500).json({ status: 'DB disconnected' });
+});
+
