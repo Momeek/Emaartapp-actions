@@ -22,3 +22,4 @@ public class HealthController {
             return new ResponseEntity<>("DB disconnected", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+}
